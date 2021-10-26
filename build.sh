@@ -8,7 +8,7 @@ EXTROOT=$PWD
 if [ $# -eq 0 ]
 then
     MOST_RECENT_TAG=`git describe --tags --abbrev=0 | cut -c2-`
-    if grep -Fq "Version: $MOST_RECENT_TAG" src/woocommerce-moneybird-bol.php
+    if grep -Fq "Version: $MOST_RECENT_TAG" ./woocommerce-moneybird-bol.php
     then
         echo "- Latest version tag found in plugin header!"
     else
@@ -18,7 +18,7 @@ then
 fi
 
 # Clean temporary files
-rm -f src/*~
+rm -f ./*~
 
 # Collect files
 rm -f $EXTROOT/$EXTNAME.zip
