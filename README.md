@@ -35,4 +35,4 @@ After activation of the plugin the settings page of the Moneybird API plugin is 
 
 ## Feature requests and support
 
-Feel free to submit and issue or merge request if you have a problem or improvement suggestion. Alternatively, send an email to support@extensiontree.com.
+Feel free to submit an issue or merge request if you have a problem or improvement suggestion. Alternatively, send an email to support@extensiontree.com.
