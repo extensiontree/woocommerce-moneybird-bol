@@ -2,13 +2,13 @@
 /*
 Plugin Name: MoneyBird API integration [extra Bol.com settings add-on]
 Plugin URI: https://extensiontree.com/nl/producten/woocommerce-extensies/moneybird-api-koppeling/
-Version: 1.5.0
+Version: 1.6.0
 Author: Marco Cox, <a href="https://extensiontree.com/nl/">ExtensionTree.com</a>
 Description: Adds extra options to the MoneyBird plugin for bol.com orders. Works with the Bol.com integrations from Woosa and Channable.
 Requires at least: 3.8
-Tested up to: 5.6.2
+Tested up to: 5.8.1
 WC requires at least: 2.2.0
-WC tested up to: 4.9.2
+WC tested up to: 5.8.0
 */
 
 if (!defined('ABSPATH')) exit; // Exit if accessed directly
@@ -164,7 +164,23 @@ if (is_plugin_active( 'woocommerce/woocommerce.php')) {
         return $sendmode;
     }
 
-
     add_filter('woocommerce_moneybird_sendmode', 'wc_mb_bol_modify_sendmode', 10, 2);
+
+
+    function wc_mb_bol_modify_invoice_reference($reference, $order) {
+        if (!is_bol_order($order)) {
+            return $reference;
+        }
+
+        $mb = WC()->integrations->integrations['moneybird2'];
+
+        if (isset($mb->settings['bol_invoice_reference'])) {
+            $reference = $mb->settings['bol_invoice_reference'];
+        }
+
+        return $reference;
+    }
+
+    add_filter('woocommerce_moneybird_reference', 'wc_mb_bol_modify_invoice_reference', 10, 2);
 
 } // if woocommerce active

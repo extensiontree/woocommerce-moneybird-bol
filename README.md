@@ -4,8 +4,9 @@ This plugin adds extra settings and functionality to the [ExtensionTree.com WooC
 The extra functionality allows you to configure the following items separately for WooCommerce orders that were received through bol.com:
 
 - Enable/disable automatic invoice generation
-- Moneybird Workflow
-- Moneybird ocument style
+- Invoice reference field
+- Moneybird workflow
+- Document style
 - Revenue ledger account
 - Always mark invoice as paid?
 - Never send invoice?

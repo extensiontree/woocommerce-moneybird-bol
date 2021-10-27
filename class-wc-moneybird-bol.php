@@ -11,7 +11,7 @@ class WC_MoneyBird_Bol extends WC_MoneyBird2 {
             return;
         }
 
-        // Add extra form fields for payment-specific styles & workflows.
+        // Add extra form fields for bol.com orders
         $this->form_fields['bol'] = array(
             'title'       => 'Instellingen voor bol.com bestellingen',
             'type'        => 'title',
@@ -23,6 +23,18 @@ class WC_MoneyBird_Bol extends WC_MoneyBird2 {
             'type'              => 'select',
             'options'           => array('yes' => 'Ja', 'no' => 'Nee'),
             'default'           => 'yes'
+        );
+        if (isset($this->custom_field_placeholders)) {
+            $placeholders = $this->custom_field_placeholders;
+        } else {
+            $placeholders = '{{order_id}}, {{product_skus}}, {{first_product_name}}, {{bol_order_id}}';
+        }
+        $this->form_fields['bol_invoice_reference'] = array(
+            'title'             => __('Reference on invoice', 'woocommerce_moneybird'),
+            'description'       => __('Specify the content of the reference field on the invoice. Available placeholders:', 'woocommerce_moneybird') . ' ' . $placeholders . '.',
+            'type'              => 'text',
+            'desc_tip'          => true,
+            'default'           => isset($this->settings['invoice_reference']) ? $this->settings['invoice_reference'] : __('Order #{{order_id}}', 'woocommerce_moneybird'),
         );
         $this->form_fields['bol_workflow_id'] = array(
             'title'             => 'Workflow bol.com bestellingen',
