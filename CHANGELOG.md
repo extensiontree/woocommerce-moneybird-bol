@@ -1,6 +1,7 @@
 ### v1.7.0
 
 - Improvement: add plugin update checker to enable (automatic) updates from WP dashboard.
+- Improvement: HPOS compatibility.
 - Mark as tested up to WordPress 6.5 and WooCommerce 9.1.
 
 

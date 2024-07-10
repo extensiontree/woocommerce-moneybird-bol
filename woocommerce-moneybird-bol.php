@@ -16,17 +16,27 @@ if (!defined('ABSPATH')) exit; // Exit if accessed directly
 include_once(ABSPATH . 'wp-admin/includes/plugin.php');
 
 require 'plugin-update-checker/plugin-update-checker.php';
+
 use YahnisElsts\PluginUpdateChecker\v5\PucFactory;
 
 PucFactory::buildUpdateChecker(
-	'https://github.com/extensiontree/woocommerce-moneybird-bol/',
-	__FILE__,
-	'woocommerce-moneybird-bol'
+    'https://github.com/extensiontree/woocommerce-moneybird-bol/',
+    __FILE__,
+    'woocommerce-moneybird-bol'
 );
 
-if (is_plugin_active( 'woocommerce/woocommerce.php')) {
+// Declare HPOS compatibility
+add_action('before_woocommerce_init', function () {
+    if (class_exists(\Automattic\WooCommerce\Utilities\FeaturesUtil::class)) {
+        \Automattic\WooCommerce\Utilities\FeaturesUtil::declare_compatibility('custom_order_tables', __FILE__, true);
+    }
+});
 
-    function insert_woocommerce_moneybird_bol_integration($integrations) {
+
+if (is_plugin_active('woocommerce/woocommerce.php')) {
+
+    function insert_woocommerce_moneybird_bol_integration($integrations)
+    {
         if (in_array('WC_MoneyBird2', $integrations)) {
             $integrations[array_search('WC_MoneyBird2', $integrations)] = 'WC_MoneyBird_Bol';
         }
@@ -37,29 +47,40 @@ if (is_plugin_active( 'woocommerce/woocommerce.php')) {
     add_filter('woocommerce_integrations', 'insert_woocommerce_moneybird_bol_integration', 20);
 
 
-    function woocommerce_moneybird_bol_init() {
+    function woocommerce_moneybird_bol_init()
+    {
         require_once('class-wc-moneybird-bol.php');
     }
 
     add_action('plugins_loaded', 'woocommerce_moneybird_bol_init', 20);
 
 
-    function is_bol_order($order) {
-        $order_id = $order->get_id();
-        if (get_post_meta($order_id, '_created_via', true) == 'bol.com') {
+    function is_bol_order($order)
+    {
+        if ($order->get_meta('created_via', true) == 'bol.com') {
             return true;
-        }
-        if (get_post_meta($order_id, '_payment_method_title', true) == 'Bol.com') {
+        } elseif ($order->get_meta('_created_via', true) == 'bol.com') {
+            return true;
+        } elseif ($order->get_meta('payment_method_title', true) == 'Bol.com') {
+            return true;
+        } elseif ($order->get_meta('_payment_method_title', true) == 'Bol.com') {
             return true;
         }
 
         // Check parent in case of refund
         $parent_order_id = $order->get_parent_id();
+        $parent_order = null;
         if ($parent_order_id) {
-            if (get_post_meta($parent_order_id, '_created_via', true) == 'bol.com') {
+            $parent_order = wc_get_order($parent_order_id);
+        }
+        if ($parent_order) {
+            if ($parent_order->get_meta('created_via', true) == 'bol.com') {
                 return true;
-            }
-            if (get_post_meta($parent_order_id, '_payment_method_title', true) == 'Bol.com') {
+            } elseif ($parent_order->get_meta('_created_via', true) == 'bol.com') {
+                return true;
+            } elseif ($parent_order->get_meta('payment_method_title', true) == 'Bol.com') {
+                return true;
+            } elseif ($parent_order->get_meta('_payment_method_title', true) == 'Bol.com') {
                 return true;
             }
         }
@@ -68,7 +89,8 @@ if (is_plugin_active( 'woocommerce/woocommerce.php')) {
     }
 
 
-    function wc_mb_bol_modify_invoice($invoice, $order) {
+    function wc_mb_bol_modify_invoice($invoice, $order)
+    {
         if (!is_bol_order($order)) {
             return $invoice;
         }
@@ -104,7 +126,7 @@ if (is_plugin_active( 'woocommerce/woocommerce.php')) {
         // Change revenue ledger account?
         if (isset($mb->settings['bol_revenue_ledger_account_id'])) {
             if (!empty($mb->settings['bol_revenue_ledger_account_id'])) {
-                for ($i=0; $i<count($invoice['details_attributes']); $i++) {
+                for ($i = 0; $i < count($invoice['details_attributes']); $i++) {
                     $invoice['details_attributes'][$i]['ledger_account_id'] = substr($mb->settings['bol_revenue_ledger_account_id'], 1);
                 }
             }
@@ -117,7 +139,8 @@ if (is_plugin_active( 'woocommerce/woocommerce.php')) {
     add_filter('woocommerce_moneybird_credit_invoice', 'wc_mb_bol_modify_invoice', 10, 2);
 
 
-    function wc_mb_bol_modify_register_payment($register_payment, $order) {
+    function wc_mb_bol_modify_register_payment($register_payment, $order)
+    {
         if (!is_bol_order($order)) {
             return $register_payment;
         }
@@ -136,7 +159,8 @@ if (is_plugin_active( 'woocommerce/woocommerce.php')) {
     add_filter('woocommerce_moneybird_register_payment', 'wc_mb_bol_modify_register_payment', 10, 2);
 
 
-    function wc_mb_bol_modify_order_is_paid($order_is_paid, $order) {
+    function wc_mb_bol_modify_order_is_paid($order_is_paid, $order)
+    {
         if (!is_bol_order($order)) {
             return $order_is_paid;
         }
@@ -155,7 +179,8 @@ if (is_plugin_active( 'woocommerce/woocommerce.php')) {
     add_filter('woocommerce_moneybird_is_order_paid', 'wc_mb_bol_modify_order_is_paid', 10, 2);
 
 
-    function wc_mb_bol_modify_sendmode($sendmode, $order) {
+    function wc_mb_bol_modify_sendmode($sendmode, $order)
+    {
         if (!is_bol_order($order)) {
             return $sendmode;
         }
@@ -176,7 +201,8 @@ if (is_plugin_active( 'woocommerce/woocommerce.php')) {
     add_filter('woocommerce_moneybird_sendmode', 'wc_mb_bol_modify_sendmode', 10, 2);
 
 
-    function wc_mb_bol_modify_invoice_reference($reference, $order) {
+    function wc_mb_bol_modify_invoice_reference($reference, $order)
+    {
         if (!is_bol_order($order)) {
             return $reference;
         }
@@ -191,5 +217,4 @@ if (is_plugin_active( 'woocommerce/woocommerce.php')) {
     }
 
     add_filter('woocommerce_moneybird_reference', 'wc_mb_bol_modify_invoice_reference', 10, 2);
-
 } // if woocommerce active
