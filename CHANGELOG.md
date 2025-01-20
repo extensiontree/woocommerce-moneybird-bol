@@ -1,3 +1,8 @@
+### v1.7.1
+
+- Update plugin-update-checker library.
+
+
 ### v1.7.0
 
 - Improvement: add plugin update checker to enable (automatic) updates from WP dashboard.
