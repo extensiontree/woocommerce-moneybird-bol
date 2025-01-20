@@ -1,6 +1,7 @@
 ### v1.7.1
 
 - Update plugin-update-checker library.
+- Mark as tested up to WordPress 6.7 and WooCommerce 9.5.
 
 
 ### v1.7.0

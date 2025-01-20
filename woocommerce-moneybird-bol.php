@@ -6,9 +6,9 @@ Version: 1.7.1
 Author: Marco Cox, <a href="https://extensiontree.com/nl/">ExtensionTree.com</a>
 Description: Adds extra options to the MoneyBird plugin for bol.com orders. Works with the Bol.com integrations from Woosa and Channable.
 Requires at least: 3.8
-Tested up to: 6.5
+Tested up to: 6.7
 WC requires at least: 2.2.0
-WC tested up to: 9.1
+WC tested up to: 9.5
 */
 
 if (!defined('ABSPATH')) exit; // Exit if accessed directly
