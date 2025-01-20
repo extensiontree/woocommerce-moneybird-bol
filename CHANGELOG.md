@@ -2,6 +2,7 @@
 
 - Update plugin-update-checker library.
 - Mark as tested up to WordPress 6.7 and WooCommerce 9.5.
+- Prevent unnecessary code from being loaded on non-admin pages.
 
 
 ### v1.7.0

@@ -35,24 +35,26 @@ add_action('before_woocommerce_init', function () {
 
 if (is_plugin_active('woocommerce/woocommerce.php')) {
 
-    function insert_woocommerce_moneybird_bol_integration($integrations)
-    {
-        if (in_array('WC_MoneyBird2', $integrations)) {
-            $integrations[array_search('WC_MoneyBird2', $integrations)] = 'WC_MoneyBird_Bol';
+    if (is_admin() && is_plugin_active('woocommerce-moneybird/woocommerce-moneybird.php')) {
+        function insert_woocommerce_moneybird_bol_integration($integrations)
+        {
+            if (in_array('WC_MoneyBird2', $integrations)) {
+                $integrations[array_search('WC_MoneyBird2', $integrations)] = 'WC_MoneyBird_Bol';
+            }
+
+            return $integrations;
         }
 
-        return $integrations;
+        add_filter('woocommerce_integrations', 'insert_woocommerce_moneybird_bol_integration', 20);
+
+
+        function woocommerce_moneybird_bol_init()
+        {
+            require_once('class-wc-moneybird-bol.php');
+        }
+
+        add_action('plugins_loaded', 'woocommerce_moneybird_bol_init', 20);
     }
-
-    add_filter('woocommerce_integrations', 'insert_woocommerce_moneybird_bol_integration', 20);
-
-
-    function woocommerce_moneybird_bol_init()
-    {
-        require_once('class-wc-moneybird-bol.php');
-    }
-
-    add_action('plugins_loaded', 'woocommerce_moneybird_bol_init', 20);
 
 
     function is_bol_order($order)
