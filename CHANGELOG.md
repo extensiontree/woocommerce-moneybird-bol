@@ -1,3 +1,9 @@
+### v1.8.0
+
+- Add support for MintyMedia Bol.com WooCommerce integration (https://mintymedia.nl/koppeling/bol-com-woocommerce-koppeling/).
+- Mark as tested up to WordPress 6.7 and WooCommerce 9.7.
+
+
 ### v1.7.1
 
 - Update plugin-update-checker library.

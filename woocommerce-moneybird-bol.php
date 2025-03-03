@@ -1,14 +1,14 @@
 <?php
 /*
-Plugin Name: MoneyBird API integration [extra Bol.com settings add-on]
+Plugin Name: Moneybird API integration [extra Bol.com settings add-on]
 Plugin URI: https://extensiontree.com/nl/producten/woocommerce-extensies/moneybird-api-koppeling/
-Version: 1.7.1
+Version: 1.8.0
 Author: Marco Cox, <a href="https://extensiontree.com/nl/">ExtensionTree.com</a>
-Description: Adds extra options to the MoneyBird plugin for bol.com orders. Works with the Bol.com integrations from Woosa and Channable.
+Description: Adds extra options to the Moneybird plugin for bol.com orders. Works with the Bol.com integrations from Woosa, Channable and MintyMedia.
 Requires at least: 3.8
 Tested up to: 6.7
 WC requires at least: 2.2.0
-WC tested up to: 9.5
+WC tested up to: 9.7
 */
 
 if (!defined('ABSPATH')) exit; // Exit if accessed directly
@@ -63,6 +63,10 @@ if (is_plugin_active('woocommerce/woocommerce.php')) {
             return true;
         } elseif ($order->get_meta('_created_via', true) == 'bol.com') {
             return true;
+        } elseif (!empty($order->get_meta('bol_order_id', true))) {
+            return true;
+        } elseif (!empty($order->get_meta('_bol_order_id', true))) {
+            return true;
         } elseif ($order->get_meta('payment_method_title', true) == 'Bol.com') {
             return true;
         } elseif ($order->get_meta('_payment_method_title', true) == 'Bol.com') {
@@ -79,6 +83,10 @@ if (is_plugin_active('woocommerce/woocommerce.php')) {
             if ($parent_order->get_meta('created_via', true) == 'bol.com') {
                 return true;
             } elseif ($parent_order->get_meta('_created_via', true) == 'bol.com') {
+                return true;
+            } elseif (!empty($parent_order->get_meta('bol_order_id', true))) {
+                return true;
+            } elseif (!empty($parent_order->get_meta('_bol_order_id', true))) {
                 return true;
             } elseif ($parent_order->get_meta('payment_method_title', true) == 'Bol.com') {
                 return true;

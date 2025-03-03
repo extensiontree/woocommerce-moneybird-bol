@@ -16,6 +16,7 @@ The add-on is compatible with the following bol.com order import plugins:
 
 - https://www.woosa.com/nl/product/bol-woocommerce-plugin/
 - https://www.channable.com/integrations/woocommerce
+- https://mintymedia.nl/koppeling/bol-com-woocommerce-koppeling/
 
 To use this plugin you first need to have the [WooCommerce Moneybird API plugin](https://extensiontree.com/nl/producten/woocommerce-extensies/moneybird-api-koppeling/) installed and activated.
 

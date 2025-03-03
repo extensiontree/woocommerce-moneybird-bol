@@ -19,7 +19,7 @@ class WC_MoneyBird_Bol extends WC_MoneyBird2 {
         );
         $this->form_fields['bol_invoice_enabled'] = array(
             'title'             => 'Facturen voor bol.com bestellingen',
-            'description'       => 'Maak MoneyBird facturen voor bol.com bestellingen.',
+            'description'       => 'Maak Moneybird facturen voor bol.com bestellingen.',
             'type'              => 'select',
             'options'           => array('yes' => 'Ja', 'no' => 'Nee'),
             'default'           => 'yes'
