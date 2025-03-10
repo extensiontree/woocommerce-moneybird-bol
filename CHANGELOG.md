@@ -1,3 +1,8 @@
+### v1.8.1
+
+- Fix incompatibility with MintyMedia Bol.com WooCommerce integration (https://mintymedia.nl/koppeling/bol-com-woocommerce-koppeling/).
+
+
 ### v1.8.0
 
 - Add support for MintyMedia Bol.com WooCommerce integration (https://mintymedia.nl/koppeling/bol-com-woocommerce-koppeling/).

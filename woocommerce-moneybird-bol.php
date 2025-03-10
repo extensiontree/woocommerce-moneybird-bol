@@ -2,12 +2,12 @@
 /*
 Plugin Name: Moneybird API integration [extra Bol.com settings add-on]
 Plugin URI: https://extensiontree.com/nl/producten/woocommerce-extensies/moneybird-api-koppeling/
-Version: 1.8.0
+Version: 1.8.1
 Author: Marco Cox, <a href="https://extensiontree.com/nl/">ExtensionTree.com</a>
 Description: Adds extra options to the Moneybird plugin for bol.com orders. Works with the Bol.com integrations from Woosa, Channable and MintyMedia.
 Requires at least: 3.8
 Tested up to: 6.7
-WC requires at least: 2.2.0
+WC requires at least: 3.0
 WC tested up to: 9.7
 */
 
@@ -57,41 +57,33 @@ if (is_plugin_active('woocommerce/woocommerce.php')) {
     }
 
 
-    function is_bol_order($order)
+    function is_bol_order($order) 
     {
-        if ($order->get_meta('created_via', true) == 'bol.com') {
-            return true;
-        } elseif ($order->get_meta('_created_via', true) == 'bol.com') {
-            return true;
-        } elseif (!empty($order->get_meta('bol_order_id', true))) {
-            return true;
-        } elseif (!empty($order->get_meta('_bol_order_id', true))) {
-            return true;
-        } elseif ($order->get_meta('payment_method_title', true) == 'Bol.com') {
-            return true;
-        } elseif ($order->get_meta('_payment_method_title', true) == 'Bol.com') {
-            return true;
+        $meta_checks = [
+            ['created_via', 'bol.com'],
+            ['_created_via', 'bol.com'], 
+            ['bol_order_id', ''],
+            ['_bol_order_id', ''],
+            ['_bol_orderid', ''],
+            ['payment_method_title', 'Bol.com'],
+            ['_payment_method_title', 'Bol.com']
+        ];
+
+        foreach ($meta_checks as $check) {
+            $value = $order->get_meta($check[0], true);
+            if ($check[1] === '' ? !empty($value) : $value === $check[1]) {
+                return true;
+            }
         }
 
         // Check parent in case of refund
         $parent_order_id = $order->get_parent_id();
-        $parent_order = null;
-        if ($parent_order_id) {
-            $parent_order = wc_get_order($parent_order_id);
-        }
-        if ($parent_order) {
-            if ($parent_order->get_meta('created_via', true) == 'bol.com') {
-                return true;
-            } elseif ($parent_order->get_meta('_created_via', true) == 'bol.com') {
-                return true;
-            } elseif (!empty($parent_order->get_meta('bol_order_id', true))) {
-                return true;
-            } elseif (!empty($parent_order->get_meta('_bol_order_id', true))) {
-                return true;
-            } elseif ($parent_order->get_meta('payment_method_title', true) == 'Bol.com') {
-                return true;
-            } elseif ($parent_order->get_meta('_payment_method_title', true) == 'Bol.com') {
-                return true;
+        if ($parent_order_id && ($parent_order = wc_get_order($parent_order_id))) {
+            foreach ($meta_checks as $check) {
+                $value = $parent_order->get_meta($check[0], true);
+                if ($check[1] === '' ? !empty($value) : $value === $check[1]) {
+                    return true;
+                }
             }
         }
 
